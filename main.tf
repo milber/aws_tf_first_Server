@@ -4,16 +4,6 @@ provider "aws" {
   shared_credentials_files = ["/Users/milber_tw/.aws/credentials"]
 }
 
-data "aws_subnet" "az_a" {
-  availability_zone = "us-east-2a"
-  vpc_id = "vpc-066a31f1234c3ce43"
-}
-
-data "aws_subnet" "az_b" {
-  availability_zone = "us-east-2b"
-  vpc_id = "vpc-066a31f1234c3ce43"
-}
-
 resource "aws_security_group" "milber-infra-squad-sg" {
     name = "milber-infra-squad-sg"
 
@@ -26,6 +16,17 @@ resource "aws_security_group" "milber-infra-squad-sg" {
     }
 
   }            
+
+
+data "aws_subnet" "az_a" {
+  availability_zone = "us-east-2a"
+  vpc_id = aws_security_group.milber-infra-squad-sg.vpc_id
+}
+
+data "aws_subnet" "az_b" {
+  availability_zone = "us-east-2b"
+  vpc_id = aws_security_group.milber-infra-squad-sg.vpc_id
+}
 
 
 resource "aws_instance" "milber_ec2_infra_squad-01" {
@@ -60,7 +61,7 @@ resource "aws_instance" "milber_ec2_infra_squad-02" {
 
   user_data = <<-EOF
               #!/bin/bash
-              echo "Hello Terraform!!!  server     02" > index.html
+              echo "Hello Terraform!!!  server     0000002" > index.html
               nohup busybox httpd -f -p 8080 &
               EOF
 
