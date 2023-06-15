@@ -41,7 +41,7 @@ resource "aws_instance" "milber_ec2_infra_squad-01" {
 
   user_data = <<-EOF
               #!/bin/bash
-              echo "Hello Terraform!!!" > index.html
+              echo "Hello Terraform!!!   server 01" > index.html
               nohup busybox httpd -f -p 8080 &
               EOF
 
@@ -60,7 +60,7 @@ resource "aws_instance" "milber_ec2_infra_squad-02" {
 
   user_data = <<-EOF
               #!/bin/bash
-              echo "Hello Terraform!!!" > index.html
+              echo "Hello Terraform!!!  server     02" > index.html
               nohup busybox httpd -f -p 8080 &
               EOF
 
