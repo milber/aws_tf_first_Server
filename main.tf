@@ -4,6 +4,16 @@ provider "aws" {
   shared_credentials_files = ["/Users/milber_tw/.aws/credentials"]
 }
 
+data "aws_subnet" "az_a" {
+  availability_zone = "us-east-2a"
+  vpc_id = "vpc-066a31f1234c3ce43"
+}
+
+data "aws_subnet" "az_b" {
+  availability_zone = "us-east-2b"
+  vpc_id = "vpc-066a31f1234c3ce43"
+}
+
 resource "aws_security_group" "milber-infra-squad-sg" {
     name = "milber-infra-squad-sg"
 
@@ -18,14 +28,34 @@ resource "aws_security_group" "milber-infra-squad-sg" {
   }            
 
 
-resource "aws_instance" "milber_ec2_infra_squad" {
+resource "aws_instance" "milber_ec2_infra_squad-01" {
   ami           = "ami-0a695f0d95cefc163"
   instance_type = "t2.micro"
+  subnet_id     = data.aws_subnet.az_b.id
 
   vpc_security_group_ids = [aws_security_group.milber-infra-squad-sg.id]
 
   tags = {
-    Name = "milber_ec2_infra_squad"
+    Name = "milber_ec2_infra_squad-01"
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "Hello Terraform!!!" > index.html
+              nohup busybox httpd -f -p 8080 &
+              EOF
+
+}
+
+resource "aws_instance" "milber_ec2_infra_squad-02" {
+  ami           = "ami-0a695f0d95cefc163"
+  instance_type = "t2.micro"
+  subnet_id     = data.aws_subnet.az_a.id
+
+  vpc_security_group_ids = [aws_security_group.milber-infra-squad-sg.id]
+
+  tags = {
+    Name = "milber_ec2_infra_squad-02"
   }
 
   user_data = <<-EOF
